@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gradient-to-b from-purple-400 via-pink-500 to-red-500">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flopo - Social Video Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans text-white">
+
+<!-- Header -->
+<header class="flex justify-between items-center p-5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
+  <h1 class="text-3xl font-extrabold text-yellow-400">Flopo</h1>
+</header>
+
+<!-- Upload Section -->
+<section class="max-w-3xl mx-auto mt-6 bg-white/20 p-6 rounded-2xl shadow-lg">
+  <h2 class="text-xl font-bold text-yellow-300 mb-4">Upload Video to Your Channel</h2>
+  <input type="text" id="channelName" placeholder="Your Channel Name" class="mb-2 w-full p-2 rounded text-black"/>
+  <input type="file" id="videoUpload" accept="video/*" class="mb-4 w-full p-2 rounded text-black"/>
+  <button onclick="uploadVideo()" class="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded font-bold w-full">Upload</button>
+</section>
+
+<!-- Video Feed -->
+<main id="videoFeed" class="max-w-6xl mx-auto mt-8 space-y-6 px-4">
+  <!-- Videos will appear here -->
+</main>
+
+<script>
+function uploadVideo() {
+  const channelInput = document.getElementById('channelName');
+  const input = document.getElementById('videoUpload');
+
+  if (!channelInput.value) {
+    alert('Please enter your channel name!');
+    return;
+  }
+  if (input.files.length === 0) {
+    alert('Please select a video first!');
+    return;
+  }
+
+  const channelName = channelInput.value;
+  const file = input.files[0];
+  const url = URL.createObjectURL(file);
+
+  // Create video card
+  const videoContainer = document.createElement('div');
+  videoContainer.className = 'bg-white/20 rounded-2xl shadow-lg overflow-hidden p-4';
+
+  videoContainer.innerHTML = `
+    <h3 class="font-bold text-lg text-yellow-300">${channelName}</h3>
+    <video src="${url}" controls class="w-full rounded-lg mt-2"></video>
+    <div class="flex justify-between items-center mt-2 text-white/80">
+      <button onclick="likeVideo(this)" class="font-bold">❤️ Like (0)</button>
+      <button onclick="shareVideo(this)" class="font-bold">🔗 Share</button>
+    </div>
+    <div class="mt-2">
+      <input type="text" placeholder="Add a comment..." class="w-full p-2 rounded text-black"/>
+      <button class="mt-2 bg-yellow-400 hover:bg-yellow-300 text-black px-3 py-1 rounded font-bold w-full" onclick="addComment(this)">Comment</button>
+      <div class="comments mt-2 space-y-1"></div>
+    </div>
+  `;
+
+  document.getElementById('videoFeed').prepend(videoContainer);
+
+  // Reset inputs
+  input.value = '';
+  channelInput.value = '';
+}
+
+// Like function
+function likeVideo(btn) {
+  const text = btn.innerText;
+  const match = text.match(/\d+/);
+  let count = match ? parseInt(match[0]) : 0;
+  count++;
+  btn.innerText = `❤️ Like (${count})`;
+}
+
+// Share function
+function shareVideo(btn) {
+  alert('Share link copied! (Simulation)');
+}
+
+// Add comment function
+function addComment(btn) {
+  const container = btn.parentElement;
+  const input = container.querySelector('input');
+  const commentDiv = container.querySelector('.comments');
+  if (!input.value) return;
+  const comment = document.createElement('div');
+  comment.className = 'bg-white/30 p-2 rounded';
+  comment.innerText = input.value;
+  commentDiv.appendChild(comment);
+  input.value = '';
+}
+</script>
+
+<!-- Footer -->
+<footer class="mt-12 text-center text-white/70 py-6">
+  &copy; 2026 Flopo | Watch, Like, Comment, Share 🔥
+</footer>
+
+</body>
+</html>
